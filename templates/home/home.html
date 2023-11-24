@@ -1,0 +1,59 @@
+{% extends 'home/layout.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+{% block content %}
+
+<table>
+    <tr>
+ <td>
+<div class="fircol">
+    <h2>Chat History</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Question</th>
+            <input id="pdf" type="submit" value="export as pdf"/> &nbsp &nbsp
+            <input id="txt" type="submit" value="export as text"/>
+        </tr>
+        </thead>
+        <tbody id = "questionsBody">
+        <!-- Add rows for chat history here -->
+        <!-- Example row -->
+        </tbody>
+    </table>
+</div>
+</td>
+
+
+<td>
+<div class="info">
+<h2>Home Page</h2>
+<p>Hello User, {{ username }}!</p>
+<p>Please enter your question</p>
+<!--<form method="post" action="/pythonresult/">-->
+    <input id="question" name="question" type="text" style="width: 800px">
+    <input id="sub" type="submit" name="search" value="Search">
+    <input id = "newChat" type="submit" name="newChat" value="New Chat"/>
+<!--</form>-->
+
+<br><br>
+    <table border="1px" width="1000px">
+        <thead>
+         <tr>
+             <th>Answer</th>
+             <th>Question</th>
+         </tr>
+        </thead>
+        <tbody id = "reqres">
+
+        </tbody>
+    </table>
+
+<script src="{{ url_for('static', filename='reqres.js') }}" defer/>
+</div>
+
+</td>
+</tr></table>
+
+
+{% endblock %}
