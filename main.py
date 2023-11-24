@@ -6,13 +6,14 @@ import openai as ai
 from bardapi import Bard
 import os
 import google.generativeai as palm
+from data_manager import allQuestions
 
 app = Flask(__name__)
 
 # Change this to your secret key (can be anything, it's for extra protection)
 app.secret_key = '1a2b3c4d5e6d7g8h9i10'
 allResponses = []
-allQuestions = []
+# allQuestions = []
 # os.environ['_BARD_API_KEY'] = "cQgmCmv-R5APARwdlDoA4T1ieWJiObeqOddxD-rLHIIYuIQdGetuIwoKAA7_a_OdrasAlQ."
 palm.configure(api_key="AIzaSyAHilJk5w8Ha9pYFxG5amaqZoWQvWSBjHg")
 # Enter your database connection details below
@@ -74,6 +75,8 @@ def login():
 
 @app.route('/get_all_questions', methods=['GET'])
 def get_all_questions():
+    print("[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]")
+    print(allQuestions);
     return jsonify({'allQuestions': allQuestions})
 
 
@@ -128,10 +131,19 @@ def response():
     allResponses.append({'response': response.result})
     print(response)
     try:
-
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('insert into chat values (NULL, %s, %s, %s) ', (username, question, response.result))
         mysql.connection.commit()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute("select question, answer from chat WHERE username LIKE %s", [username])
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        questionsFromDb = cursor.fetchall()
+        # print(questionsFromDb)
+        if len(questionsFromDb) == 0:
+            noQues = {'qustions': 'No Previous Questions Found'}
+            allQuestions.append({'questionsList': noQues})
+        else:
+            allQuestions.append({'questionsList': questionsFromDb})
     except Exception as e:
         print(e)
 
